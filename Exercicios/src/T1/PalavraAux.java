@@ -11,9 +11,7 @@ public class PalavraAux {
 
     @Override
     public String toString() {
-        return "Aux{" +
-                "palavra = '" + palavra + '\'' +
-                ", quantidade = " + quantidade +
-                '}';
+        return "Palavra = '" + palavra + '\'' +
+                ", quantidade = " + quantidade;
     }
 }
