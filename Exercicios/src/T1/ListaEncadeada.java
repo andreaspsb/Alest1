@@ -3,11 +3,11 @@ package T1;
 public class ListaEncadeada {
 
     private class Nodo {
-        public Aux item;
+        public PalavraAux item;
         public Nodo proximo;
 
         public Nodo(String palavra) {
-            this.item = new Aux(palavra, 1);
+            this.item = new PalavraAux(palavra, 1);
             this.proximo = null;
         }
     }    
@@ -113,7 +113,7 @@ public class ListaEncadeada {
         return -1; // elemento nao encontrado
     }
 
-    public Aux buscar(int posicao) {
+    public PalavraAux buscar(int posicao) {
         if (posicao < 0 || posicao >= tamanho) {
             throw new IndexOutOfBoundsException("Posicao invalida");
         }
@@ -179,7 +179,7 @@ public class ListaEncadeada {
             Nodo proximo = atual.proximo;
             while (proximo != null) {
                 if (atual.item.quantidade < proximo.item.quantidade) {
-                    Aux temp = atual.item;
+                    PalavraAux temp = atual.item;
                     atual.item = proximo.item;
                     proximo.item = temp;
                 }

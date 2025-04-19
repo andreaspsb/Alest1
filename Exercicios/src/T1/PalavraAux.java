@@ -1,10 +1,10 @@
 package T1;
 
-public class Aux {
+public class PalavraAux {
     public String palavra;
     public int quantidade;
 
-    public Aux(String palavra, int quantidade) {
+    public PalavraAux(String palavra, int quantidade) {
         this.palavra = palavra;
         this.quantidade = quantidade;
     }

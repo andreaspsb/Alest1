@@ -7,19 +7,40 @@ import java.util.Scanner;
 public class ContadorDeTexto {
     public static void main(String[] args) throws FileNotFoundException {
 
-        // Scanner arquivo = new Scanner(System.in);
-        // System.out.println("Digite o caminho e nome do arquivo:");
-        // String nomeArquivo = arquivo.nextLine();
-
-        // obter nome do arquivo por linha de comando
+        // Verifica se o arquivo foi passado como argumento
+        if (args.length == 0) {
+            System.out.println("Nenhum arquivo foi passado como argumento.");
+            System.exit(1);
+        }
+        
         String nomeArquivo = args[0];
-        //String nomeArquivo = "C:\\Users\\andre\\Documents\\tale.txt";
-        //String nomeArquivo = "src/T1/dracula.txt";
+        
+        // Verifica se o arquivo existe
+        File arquivo = new File(nomeArquivo);
+        if (!arquivo.exists()) {
+            System.out.println("Arquivo não encontrado: " + nomeArquivo);
+            System.exit(1);
+        }
+        // Verifica se o arquivo é um arquivo de texto
+        if (!arquivo.isFile()) {
+            System.out.println("O caminho fornecido não é um arquivo: " + nomeArquivo);
+            System.exit(1);
+        }
+        // Verifica se o arquivo é legível
+        if (!arquivo.canRead()) {
+            System.out.println("Não é possível ler o arquivo: " + nomeArquivo);
+            System.exit(1);
+        }
+        // Verifica se o arquivo é um arquivo de texto
+        if (!nomeArquivo.endsWith(".txt")) {
+            System.out.println("O arquivo não é um arquivo de texto: " + nomeArquivo);
+            System.exit(1);
+        }
 
         ListaEncadeada lPalavras = new ListaEncadeada();
         ListaEstatica lPalindromos = new ListaEstatica();
 
-        Scanner ler = new Scanner(new File(nomeArquivo));
+        Scanner ler = new Scanner(arquivo);
         while (ler.hasNextLine()) {
             String linha = ler.nextLine();
             // Remove caracteres especiais e transforma em minúsculas
@@ -27,7 +48,6 @@ public class ContadorDeTexto {
             // Divide a linha em palavras
             String[] palavras = linha.split("[\\s]+");
 
-            //String[] palavras = linha.split(" ");
             for (String palavra : palavras) {
                 if (lPalavras.existe(palavra)) {
                     // Se a palavra já existe, incrementa a quantidade
