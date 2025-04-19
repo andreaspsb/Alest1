@@ -1,4 +1,4 @@
-package TADs;
+package T1;
 
 public class ListaEstatica {
 
@@ -101,6 +101,10 @@ public class ListaEstatica {
             s = s + itens[i] + " ";
         }
         return s;
+    }
+
+    public int retornarTamanho() {
+        return tamanho;
     }
 
 }
