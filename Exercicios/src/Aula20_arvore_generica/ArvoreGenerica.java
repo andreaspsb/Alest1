@@ -75,13 +75,13 @@ public class ArvoreGenerica {
         Nodo filho = n.primeiroFilho;
         while (filho != null) {
             Nodo r = buscarNodoRecursivo(filho, chave);
-            if (r == null) {
+            if (r != null) {
                 return r;
             }
             filho = filho.proximoIrmao;
         }
         
-        return filho;
+        return null;
     }
 
     public int getAltura() {
