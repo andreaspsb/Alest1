@@ -80,7 +80,7 @@ public class ArvoreGenerica {
             }
             filho = filho.proximoIrmao;
         }
-        
+
         return null;
     }
 
@@ -118,8 +118,13 @@ public class ArvoreGenerica {
     }
 
     public String getPai(String chave) {
-
-    }    
+        Nodo nodo = getNodo(chave);
+        if (nodo == null) {
+            System.out.println("Nodo não encontrado");
+            return null;
+        }
+        return nodo.pai.valor;
+    }
 
     public void imprimir() {
 
