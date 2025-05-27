@@ -46,6 +46,10 @@ public class ArvoreBinariaPesquisa {
 
     public void inserir(int chave) {
         Nodo n = new Nodo(chave);
+        if (raiz == null) {
+            raiz = n;
+            return;
+        }
         this.inserir(chave, n, raiz);
     }
 
@@ -95,7 +99,6 @@ public class ArvoreBinariaPesquisa {
             encontrado = buscarNodoRecursivo(n.filhoEsquerda, chave);
         } else {
             encontrado = buscarNodoRecursivo(n.filhoDireita, chave);
-
         }
 
         return encontrado;
