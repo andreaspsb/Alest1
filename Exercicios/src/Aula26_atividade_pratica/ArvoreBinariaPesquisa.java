@@ -1,13 +1,14 @@
-package Aula24_arvore_binaria_pesquisa;
+package Aula26_atividade_pratica;
 
-public class ArvoreBinariaPesquisa {
-    private class Nodo {
-        private int chave;
-        private Nodo filhoEsquerda;
-        private Nodo filhoDireita;
-        private Nodo pai;
+public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
 
-        public Nodo(int chave) {
+    private class Nodo<T extends Comparable<T>> {
+        private T chave;
+        private Nodo<T> filhoEsquerda;
+        private Nodo<T> filhoDireita;
+        private Nodo<T> pai;
+
+        public Nodo(T chave) {
             this.chave = chave;
         }
 
@@ -36,16 +37,16 @@ public class ArvoreBinariaPesquisa {
         }
     }
 
-    private Nodo raiz;
+    private Nodo<T> raiz;
     private int tamanho;
 
-    public ArvoreBinariaPesquisa(int valor) {
-        raiz = new Nodo(valor);
+    public ArvoreBinariaPesquisa(T valor) {
+        raiz = new Nodo<T>(valor);
         tamanho = 1;
     }
 
-    public void inserir(int chave) {
-        Nodo n = new Nodo(chave);
+    public void inserir(T chave) {
+        Nodo<T> n = new Nodo<T>(chave);
         if (raiz == null) {
             raiz = n;
             return;
@@ -53,8 +54,8 @@ public class ArvoreBinariaPesquisa {
         this.inserir(chave, n, raiz);
     }
 
-    private void inserir(int chave, Nodo n, Nodo pai) {
-        if (chave < pai.chave) {
+    private void inserir(T chave, Nodo<T> n, Nodo<T> pai) {
+        if (chave.compareTo(pai.chave) < 0) {
             if (pai.filhoEsquerda == null) {
                 pai.filhoEsquerda = n;
                 n.pai = pai;
@@ -73,8 +74,8 @@ public class ArvoreBinariaPesquisa {
         }
     }
 
-    public void imprimirFilhos(int pai) {
-        Nodo nodoPai = obterNodo(pai);
+    public void imprimirFilhos(T pai) {
+        Nodo<T> nodoPai = obterNodo(pai);
         if (nodoPai == null) {
             System.out.println("Nodo não encontrado");
             return;
@@ -82,11 +83,11 @@ public class ArvoreBinariaPesquisa {
         nodoPai.imprimirFilhos();
     }
 
-    private Nodo obterNodo(int pai) {
+    private Nodo<T> obterNodo(T pai) {
         return buscarNodoRecursivo(raiz, pai);
     }
 
-    private Nodo buscarNodoRecursivo(Nodo n, int chave) {
+    private Nodo<T> buscarNodoRecursivo(Nodo<T> n, T chave) {
         if (n == null) {
             return null;
         }
@@ -94,8 +95,8 @@ public class ArvoreBinariaPesquisa {
             return n;
         }
 
-        Nodo encontrado;
-        if (chave < n.chave) {
+        Nodo<T> encontrado;
+        if (chave.compareTo(n.chave) < 0) {
             encontrado = buscarNodoRecursivo(n.filhoEsquerda, chave);
         } else {
             encontrado = buscarNodoRecursivo(n.filhoDireita, chave);
@@ -104,15 +105,15 @@ public class ArvoreBinariaPesquisa {
         return encontrado;
     }
 
-    public int obterPai(int chave) {
-        Nodo nodo = obterNodo(chave);
+    public T obterPai(T chave) {
+        Nodo<T> nodo = obterNodo(chave);
         if (nodo == null) {
             System.out.println("Nodo não encontrado");
-            return -1;
+            return null;
         }
         if (nodo.pai == null) {
             System.out.println("Nodo raiz");
-            return -1;
+            return null;
         }
         return nodo.pai.chave;
     }
@@ -126,8 +127,8 @@ public class ArvoreBinariaPesquisa {
         tamanho = 0;
     }
 
-    public int getGrau(int chave) {
-        Nodo n = obterNodo(chave);
+    public int getGrau(T chave) {
+        Nodo<T> n = obterNodo(chave);
         if (n == null) {
             return -1;
         }
@@ -135,13 +136,13 @@ public class ArvoreBinariaPesquisa {
         return n.getGrau();
     }
 
-    public void remover(int chave) {
-        Nodo n = obterNodo(chave);
+    public void remover(T chave) {
+        Nodo<T> n = obterNodo(chave);
         if (n == null) {
             return;
         }
 
-        Nodo pai = n.pai;
+        Nodo<T> pai = n.pai;
 
         int grau = n.getGrau();
         if (grau == 0) {
@@ -155,7 +156,7 @@ public class ArvoreBinariaPesquisa {
                 pai.filhoDireita = null;
             }
         } else if (grau == 1) {
-            Nodo filho;
+            Nodo<T> filho;
             if (n.filhoEsquerda != null) {
                 filho = n.filhoEsquerda;
             } else {
@@ -172,8 +173,8 @@ public class ArvoreBinariaPesquisa {
                 raiz = filho;
             }
         } else {
-            Nodo[] elementosArvoreDireita = elementosCentralOrdem(n.filhoDireita);
-            Nodo substituto = elementosArvoreDireita[0];
+            Nodo<T>[] elementosArvoreDireita = elementosCentralOrdem(n.filhoDireita);
+            Nodo<T> substituto = elementosArvoreDireita[0];
 
             substituto.pai.filhoEsquerda = null;
 
@@ -204,12 +205,12 @@ public class ArvoreBinariaPesquisa {
         tamanho--;
     }
 
-    private Nodo[] elementosCentralOrdem(Nodo raiz) {
+    private Nodo<T>[] elementosCentralOrdem(Nodo<T> raiz) {
         if (tamanho == 0) {
             return null;
         }
-        Nodo[] elementos = new Nodo[tamanho];
-        Nodo n = raiz;
+        Nodo<T>[] elementos = (ArvoreBinariaPesquisa<T>.Nodo<T>[]) new Object[tamanho];
+        Nodo<T> n = raiz;
         Integer pos = 0;
         pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
         elementos[pos] = n;
@@ -219,7 +220,7 @@ public class ArvoreBinariaPesquisa {
         return elementos;
     }
 
-    private Integer elementosCentralOrdem(Nodo[] elementos, Nodo n, Integer pos) {
+    private Integer elementosCentralOrdem(Nodo<T>[] elementos, Nodo<T> n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -232,12 +233,12 @@ public class ArvoreBinariaPesquisa {
         return pos;
     }
 
-    public int[] elementosPosOrdem() {
+    public T[] elementosPosOrdem() {
         if (tamanho == 0) {
             return null;
         }
-        int[] elementos = new int[tamanho];
-        Nodo n = raiz;
+        T[] elementos = (T[]) new Object[tamanho];
+        Nodo<T> n = raiz;
         Integer pos = 0;
         pos = elementosPosOrdem(elementos, n.filhoEsquerda, pos);
         pos = elementosPosOrdem(elementos, n.filhoDireita, pos);
@@ -247,7 +248,7 @@ public class ArvoreBinariaPesquisa {
         return elementos;
     }
 
-    private Integer elementosPosOrdem(int[] elementos, Nodo n, Integer pos) {
+    private Integer elementosPosOrdem(T[] elementos, Nodo<T> n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -260,13 +261,13 @@ public class ArvoreBinariaPesquisa {
         return pos;
     }    
 
-    public int[] elementosPreOrdem() {
+    public T[] elementosPreOrdem() {
         if (tamanho == 0) {
             return null;
         }
 
-        int[] elementos = new int[tamanho];
-        Nodo n = raiz;
+        T[] elementos = (T[]) new Object[tamanho];
+        Nodo<T> n = raiz;
         Integer pos = 0;
 
         elementos[pos] = n.chave;
@@ -277,7 +278,7 @@ public class ArvoreBinariaPesquisa {
         return elementos;
     }
 
-    private Integer elementosPreOrdem(int[] elementos, Nodo n, Integer pos) {
+    private Integer elementosPreOrdem(T[] elementos, Nodo<T> n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -290,13 +291,13 @@ public class ArvoreBinariaPesquisa {
         return pos;
     }
 
-    public int[] elementosCentralOrdem() {
+    public T[] elementosCentralOrdem() {
         if (tamanho == 0) {
             return null;
         }
 
-        int[] elementos = new int[tamanho];
-        Nodo n = raiz;
+        T[] elementos = (T[]) new Object[tamanho];
+        Nodo<T> n = raiz;
         Integer pos = 0;
 
         pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
@@ -307,7 +308,7 @@ public class ArvoreBinariaPesquisa {
         return elementos;
     }
 
-    private Integer elementosCentralOrdem(int[] elementos, Nodo n, Integer pos) {
+    private Integer elementosCentralOrdem(T[] elementos, Nodo<T> n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -319,4 +320,6 @@ public class ArvoreBinariaPesquisa {
         
         return pos;
     }
+
+
 }
