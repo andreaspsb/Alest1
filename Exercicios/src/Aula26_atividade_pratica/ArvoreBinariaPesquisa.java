@@ -321,5 +321,56 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return pos;
     }
 
+    public boolean existe(T item) {
+        if(this.obterNodo(item) != null) {
+            return true;
+        }
+        return false;
+    }
 
+    public int obterAltura() {
+        if (raiz == null) {
+            return -1;
+        }
+
+        int esquerda = obterAltura(raiz.filhoEsquerda);
+        int direita = obterAltura(raiz.filhoDireita);
+
+        return 1 + Math.max(esquerda, direita);
+    }
+
+    private int obterAltura(Nodo<T> n) {
+        if (n == null) {
+            return -1;
+        }
+
+        int esquerda = obterAltura(n.filhoEsquerda);
+        int direita = obterAltura(n.filhoDireita);
+
+        return 1 + Math.max(esquerda, direita);
+
+    }
+
+    public int obterNivel(T item) {
+        return obterNivel(raiz, item, 0);
+    }
+
+    private int obterNivel(Nodo<T> n, T chave, int nivelAtual) {
+        if (n == null) {
+            return -1;
+        }
+
+        if (n.chave == chave) {
+            return nivelAtual;
+        }
+
+        if (chave.compareTo(n.chave) < 0) {
+            return obterNivel(n.filhoEsquerda, chave, nivelAtual + 1);
+        } else {
+            return obterNivel(n.filhoDireita, chave, nivelAtual + 1);
+        }
+    }
+    
 }
+
+
