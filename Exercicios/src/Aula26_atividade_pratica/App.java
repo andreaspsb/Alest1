@@ -50,7 +50,5 @@ public class App {
             System.err.println("Erro ao ler o arquivo: " + e.getMessage());
         }
     }
-
-
     
 }

@@ -2,11 +2,11 @@ package Aula26_atividade_pratica;
 
 public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
 
-    private class Nodo<T extends Comparable<T>> {
+    private class Nodo {
         private T chave;
-        private Nodo<T> filhoEsquerda;
-        private Nodo<T> filhoDireita;
-        private Nodo<T> pai;
+        private Nodo filhoEsquerda;
+        private Nodo filhoDireita;
+        private Nodo pai;
 
         public Nodo(T chave) {
             this.chave = chave;
@@ -37,16 +37,16 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         }
     }
 
-    private Nodo<T> raiz;
+    private Nodo raiz;
     private int tamanho;
 
     public ArvoreBinariaPesquisa(T valor) {
-        raiz = new Nodo<T>(valor);
+        raiz = new Nodo(valor);
         tamanho = 1;
     }
 
     public void inserir(T chave) {
-        Nodo<T> n = new Nodo<T>(chave);
+        Nodo n = new Nodo(chave);
         if (raiz == null) {
             raiz = n;
             return;
@@ -54,7 +54,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         this.inserir(chave, n, raiz);
     }
 
-    private void inserir(T chave, Nodo<T> n, Nodo<T> pai) {
+    private void inserir(T chave, Nodo n, Nodo pai) {
         if (chave.compareTo(pai.chave) < 0) {
             if (pai.filhoEsquerda == null) {
                 pai.filhoEsquerda = n;
@@ -75,7 +75,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
     }
 
     public void imprimirFilhos(T pai) {
-        Nodo<T> nodoPai = obterNodo(pai);
+        Nodo nodoPai = obterNodo(pai);
         if (nodoPai == null) {
             System.out.println("Nodo não encontrado");
             return;
@@ -83,11 +83,11 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         nodoPai.imprimirFilhos();
     }
 
-    private Nodo<T> obterNodo(T pai) {
+    private Nodo obterNodo(T pai) {
         return buscarNodoRecursivo(raiz, pai);
     }
 
-    private Nodo<T> buscarNodoRecursivo(Nodo<T> n, T chave) {
+    private Nodo buscarNodoRecursivo(Nodo n, T chave) {
         if (n == null) {
             return null;
         }
@@ -95,7 +95,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             return n;
         }
 
-        Nodo<T> encontrado;
+        Nodo encontrado;
         if (chave.compareTo(n.chave) < 0) {
             encontrado = buscarNodoRecursivo(n.filhoEsquerda, chave);
         } else {
@@ -106,7 +106,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
     }
 
     public T obterPai(T chave) {
-        Nodo<T> nodo = obterNodo(chave);
+        Nodo nodo = obterNodo(chave);
         if (nodo == null) {
             System.out.println("Nodo não encontrado");
             return null;
@@ -128,7 +128,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
     }
 
     public int getGrau(T chave) {
-        Nodo<T> n = obterNodo(chave);
+        Nodo n = obterNodo(chave);
         if (n == null) {
             return -1;
         }
@@ -137,12 +137,12 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
     }
 
     public void remover(T chave) {
-        Nodo<T> n = obterNodo(chave);
+        Nodo n = obterNodo(chave);
         if (n == null) {
             return;
         }
 
-        Nodo<T> pai = n.pai;
+        Nodo pai = n.pai;
 
         int grau = n.getGrau();
         if (grau == 0) {
@@ -156,7 +156,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
                 pai.filhoDireita = null;
             }
         } else if (grau == 1) {
-            Nodo<T> filho;
+            Nodo filho;
             if (n.filhoEsquerda != null) {
                 filho = n.filhoEsquerda;
             } else {
@@ -173,8 +173,8 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
                 raiz = filho;
             }
         } else {
-            Nodo<T>[] elementosArvoreDireita = elementosCentralOrdem(n.filhoDireita);
-            Nodo<T> substituto = elementosArvoreDireita[0];
+            Nodo[] elementosArvoreDireita = elementosCentralOrdem(n.filhoDireita);
+            Nodo substituto = elementosArvoreDireita[0];
 
             substituto.pai.filhoEsquerda = null;
 
@@ -205,12 +205,12 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         tamanho--;
     }
 
-    private Nodo<T>[] elementosCentralOrdem(Nodo<T> raiz) {
+    private Nodo[] elementosCentralOrdem(Nodo raiz) {
         if (tamanho == 0) {
             return null;
         }
-        Nodo<T>[] elementos = (ArvoreBinariaPesquisa<T>.Nodo<T>[]) new Object[tamanho];
-        Nodo<T> n = raiz;
+        Nodo[] elementos = (Nodo[]) new Object[tamanho];
+        Nodo n = raiz;
         Integer pos = 0;
         pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
         elementos[pos] = n;
@@ -220,7 +220,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return elementos;
     }
 
-    private Integer elementosCentralOrdem(Nodo<T>[] elementos, Nodo<T> n, Integer pos) {
+    private Integer elementosCentralOrdem(Nodo[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -238,7 +238,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             return null;
         }
         T[] elementos = (T[]) new Object[tamanho];
-        Nodo<T> n = raiz;
+        Nodo n = raiz;
         Integer pos = 0;
         pos = elementosPosOrdem(elementos, n.filhoEsquerda, pos);
         pos = elementosPosOrdem(elementos, n.filhoDireita, pos);
@@ -248,7 +248,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return elementos;
     }
 
-    private Integer elementosPosOrdem(T[] elementos, Nodo<T> n, Integer pos) {
+    private Integer elementosPosOrdem(T[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -267,7 +267,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         }
 
         T[] elementos = (T[]) new Object[tamanho];
-        Nodo<T> n = raiz;
+        Nodo n = raiz;
         Integer pos = 0;
 
         elementos[pos] = n.chave;
@@ -278,7 +278,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return elementos;
     }
 
-    private Integer elementosPreOrdem(T[] elementos, Nodo<T> n, Integer pos) {
+    private Integer elementosPreOrdem(T[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -297,7 +297,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         }
 
         T[] elementos = (T[]) new Object[tamanho];
-        Nodo<T> n = raiz;
+        Nodo n = raiz;
         Integer pos = 0;
 
         pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
@@ -308,7 +308,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return elementos;
     }
 
-    private Integer elementosCentralOrdem(T[] elementos, Nodo<T> n, Integer pos) {
+    private Integer elementosCentralOrdem(T[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -319,6 +319,33 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         pos = elementosCentralOrdem(elementos, n.filhoDireita, pos);
         
         return pos;
+    }
+
+    public T[] elementosLarguraOrdem() {
+        if (tamanho == 0) {
+            return null;
+        }
+
+        T[] elementos = (T[]) new Object[tamanho];
+        Integer pos = 0;
+
+        FilaEstatica<Nodo> fila = new FilaEstatica<Nodo>();
+
+        fila.enfileirar(raiz);
+
+        while (fila.getTamanho() != 0) {
+            Nodo n = fila.desenfileirar();
+            elementos[pos] = n.chave;
+            pos++;
+            if (n.filhoEsquerda != null) {
+                fila.enfileirar(n.filhoEsquerda);
+            }
+            if (n.filhoDireita != null) {
+                fila.enfileirar(n.filhoDireita);
+            }
+        }                
+
+        return elementos;
     }
 
     public boolean existe(T item) {
@@ -339,7 +366,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return 1 + Math.max(esquerda, direita);
     }
 
-    private int obterAltura(Nodo<T> n) {
+    private int obterAltura(Nodo n) {
         if (n == null) {
             return -1;
         }
@@ -355,7 +382,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         return obterNivel(raiz, item, 0);
     }
 
-    private int obterNivel(Nodo<T> n, T chave, int nivelAtual) {
+    private int obterNivel(Nodo n, T chave, int nivelAtual) {
         if (n == null) {
             return -1;
         }
