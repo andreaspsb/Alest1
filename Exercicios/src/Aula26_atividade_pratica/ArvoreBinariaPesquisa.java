@@ -45,10 +45,15 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         tamanho = 1;
     }
 
+    public ArvoreBinariaPesquisa() {
+        tamanho = 0;
+    }
+
     public void inserir(T chave) {
         Nodo n = new Nodo(chave);
         if (raiz == null) {
             raiz = n;
+            tamanho = 1;
             return;
         }
         this.inserir(chave, n, raiz);

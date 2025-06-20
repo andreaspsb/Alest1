@@ -11,14 +11,22 @@ public class FilaEstatica<T> {
         itens = (T[]) new Object[capacidade];
         inicio = 0;
         fim = -1;
+        tamanho = 0;
     }
 
     public int getTamanho() {
         return tamanho;
     }
 
+    public boolean isVazia() {
+        return tamanho == 0;
+    }
+
     public void enfileirar(T item) {
-        if (tamanho + 2 > capacidade) {
+        if (item == null) {
+            throw new IllegalArgumentException("Item não pode ser nulo.");
+        }
+        if (tamanho == capacidade) {
             duplicar();
         }
         fim++;
@@ -44,10 +52,19 @@ public class FilaEstatica<T> {
         itens[inicio] = null;
         inicio++;
         tamanho--;
+        // Ajusta ponteiros se a fila ficar vazia
+        if (tamanho == 0) {
+            inicio = 0;
+            fim = -1;
+        }
         return retorno;
     }
 
     public void imprimir() {
+        if (isVazia()) {
+            System.out.println("Fila vazia.");
+            return;
+        }
         System.out.println();
         for (int i = inicio; i <= fim; i++) {
             System.out.print(itens[i] + " ");
