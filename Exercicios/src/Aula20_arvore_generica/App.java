@@ -17,5 +17,7 @@ public class App {
         System.out.println("Altura = " + arvore.getAltura());
 
         System.out.println("Grau da raiz = " + arvore.getGrau("A"));
+
+        arvore.imprimir();
     }
 }

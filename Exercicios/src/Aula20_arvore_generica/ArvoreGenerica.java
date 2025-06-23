@@ -6,6 +6,7 @@ public class ArvoreGenerica {
         private String valor;
         private Nodo primeiroFilho;
         private Nodo proximoIrmao;
+        private Nodo pai;
 
         public Nodo(String valor) {
             this.valor = valor;
@@ -14,6 +15,7 @@ public class ArvoreGenerica {
         public void adicionarFilho(String valor) {
             tamanho++;
             Nodo novoFilho = new Nodo(valor);
+            novoFilho.pai = this;
             if (this.primeiroFilho == null) {
                 this.primeiroFilho = novoFilho;
                 return;
@@ -32,6 +34,7 @@ public class ArvoreGenerica {
         public void adicionarIrmao(String valor) {
             tamanho++;
             Nodo novoIrmao = new Nodo(valor);
+            novoIrmao.pai = this.pai;
             if (this.proximoIrmao == null) {
                 this.proximoIrmao = novoIrmao;
                 return;
@@ -127,8 +130,22 @@ public class ArvoreGenerica {
     }
 
     public void imprimir() {
-
+        this.imprimir(raiz);
     }
+
+    private void imprimir(Nodo n) {
+        if (n == null) {
+            return;
+        }
+        System.out.println(n.valor);
+
+        Nodo filho = n.primeiroFilho;
+        while (filho != null) {
+            imprimir(filho);
+            filho = filho.proximoIrmao;
+        }
+    }
+
 
     public void imprimirFilhos(Nodo pai) {
         Nodo aux = pai.primeiroFilho;

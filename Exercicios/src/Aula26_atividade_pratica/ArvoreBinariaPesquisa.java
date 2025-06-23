@@ -1,5 +1,9 @@
 package Aula26_atividade_pratica;
 
+import java.lang.reflect.Array;
+
+import Aula14_fila_estatica.FilaEstatica;
+
 public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
 
     private class Nodo {
@@ -23,7 +27,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             System.out.println();
         }
 
-        public int getGrau() {
+        public int obterGrau() {
             int qtdFilhos = 0;
 
             if (filhoEsquerda != null) {
@@ -56,17 +60,17 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             tamanho = 1;
             return;
         }
-        this.inserir(chave, n, raiz);
+        this.inserir(n, raiz);
     }
 
-    private void inserir(T chave, Nodo n, Nodo pai) {
-        if (chave.compareTo(pai.chave) < 0) {
+    private void inserir(Nodo n, Nodo pai) {
+        if (n.chave.compareTo(pai.chave) < 0) {
             if (pai.filhoEsquerda == null) {
                 pai.filhoEsquerda = n;
                 n.pai = pai;
                 tamanho++;
             } else {
-                inserir(chave, n, pai.filhoEsquerda);
+                inserir(n, pai.filhoEsquerda);
             }
         } else {
             if (pai.filhoDireita == null) {
@@ -74,7 +78,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
                 n.pai = pai;
                 tamanho++;
             } else {
-                inserir(chave, n, pai.filhoDireita);
+                inserir(n, pai.filhoDireita);
             }
         }
     }
@@ -132,13 +136,13 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         tamanho = 0;
     }
 
-    public int getGrau(T chave) {
+    public int obterGrau(T chave) {
         Nodo n = obterNodo(chave);
         if (n == null) {
             return -1;
         }
 
-        return n.getGrau();
+        return n.obterGrau();
     }
 
     public void remover(T chave) {
@@ -149,7 +153,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
 
         Nodo pai = n.pai;
 
-        int grau = n.getGrau();
+        int grau = n.obterGrau();
         if (grau == 0) {
             if (obterTamanho() == 1) {
                 limpar();
@@ -208,19 +212,18 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         }
 
         tamanho--;
-    }
-
+    }    
+    
+    // metodo privado usado pelo remover
     private Nodo[] elementosCentralOrdem(Nodo raiz) {
         if (tamanho == 0) {
             return null;
         }
+        
         Nodo[] elementos = (Nodo[]) new Object[tamanho];
-        Nodo n = raiz;
         Integer pos = 0;
-        pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
-        elementos[pos] = n;
-        pos++;
-        pos = elementosCentralOrdem(elementos, n.filhoDireita, pos);        
+
+        pos = elementosCentralOrdem(elementos, raiz, pos);               
 
         return elementos;
     }
@@ -242,13 +245,12 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         if (tamanho == 0) {
             return null;
         }
-        T[] elementos = (T[]) new Object[tamanho];
-        Nodo n = raiz;
-        Integer pos = 0;
-        pos = elementosPosOrdem(elementos, n.filhoEsquerda, pos);
-        pos = elementosPosOrdem(elementos, n.filhoDireita, pos);
 
-        elementos[pos] = n.chave;
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
+        Integer pos = 0;
+
+        elementosPosOrdem(elementos, raiz, pos);
 
         return elementos;
     }
@@ -270,15 +272,12 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
         if (tamanho == 0) {
             return null;
         }
-
-        T[] elementos = (T[]) new Object[tamanho];
-        Nodo n = raiz;
+        
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
         Integer pos = 0;
 
-        elementos[pos] = n.chave;
-        pos++;
-        pos = elementosPreOrdem(elementos, n.filhoEsquerda, pos);
-        pos = elementosPreOrdem(elementos, n.filhoDireita, pos);        
+        elementosPreOrdem(elementos, raiz, pos);
 
         return elementos;
     }
@@ -299,16 +298,13 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
     public T[] elementosCentralOrdem() {
         if (tamanho == 0) {
             return null;
-        }
+        }        
 
-        T[] elementos = (T[]) new Object[tamanho];
-        Nodo n = raiz;
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
         Integer pos = 0;
 
-        pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
-        elementos[pos] = n.chave;
-        pos++;
-        pos = elementosCentralOrdem(elementos, n.filhoDireita, pos);        
+        elementosCentralOrdem(elementos, raiz, pos);                
 
         return elementos;
     }
@@ -331,14 +327,15 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             return null;
         }
 
-        T[] elementos = (T[]) new Object[tamanho];
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
         Integer pos = 0;
 
         FilaEstatica<Nodo> fila = new FilaEstatica<Nodo>();
 
         fila.enfileirar(raiz);
 
-        while (fila.getTamanho() != 0) {
+        while (fila.obterTamanho() != 0) {
             Nodo n = fila.desenfileirar();
             elementos[pos] = n.chave;
             pos++;
@@ -392,7 +389,7 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             return -1;
         }
 
-        if (n.chave == chave) {
+        if (n.chave.equals(chave)) {
             return nivelAtual;
         }
 
@@ -402,7 +399,44 @@ public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
             return obterNivel(n.filhoDireita, chave, nivelAtual + 1);
         }
     }
+
+    public T[] obterChavesAteChavePesquisa(T chave) {
+        
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
+        Integer pos = 0;
+        Nodo n = raiz;
+        boolean achou = false;
+
+        while (n != null) {
+            elementos[pos] = n.chave;
+            pos++;
+            if (n.chave.equals(chave)) {
+                achou = true;
+                break;
+            }
+            if (chave.compareTo(n.chave) < 0) {
+                n = n.filhoEsquerda;
+            } else {
+                n = n.filhoDireita;
+            }
+            
+        }
+
+        if (!achou) {
+            return null;            
+        }
+
+        //retornar array sem os nulls        
+        @SuppressWarnings("unchecked")
+        T[] retorno = (T[]) Array.newInstance(raiz.chave.getClass(), pos);
+        for (int i = 0; i < pos; i++) {
+            retorno[i] = elementos[i];
+        }
+
+        return retorno;
+
+    }    
     
 }
-
 

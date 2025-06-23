@@ -13,6 +13,8 @@ public class App {
         a.adicionarFilho("D", "I");
 
         a.imprimirFilhos("A");
+
+        a.imprimirArvoreCompleta();
     }
 
 }

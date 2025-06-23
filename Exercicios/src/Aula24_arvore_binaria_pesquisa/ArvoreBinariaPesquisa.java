@@ -1,13 +1,18 @@
 package Aula24_arvore_binaria_pesquisa;
 
-public class ArvoreBinariaPesquisa {
+import java.lang.reflect.Array;
+
+import Aula14_fila_estatica.FilaEstatica;
+
+public class ArvoreBinariaPesquisa<T extends Comparable<T>> {
+
     private class Nodo {
-        private int chave;
+        private T chave;
         private Nodo filhoEsquerda;
         private Nodo filhoDireita;
         private Nodo pai;
 
-        public Nodo(int chave) {
+        public Nodo(T chave) {
             this.chave = chave;
         }
 
@@ -22,7 +27,7 @@ public class ArvoreBinariaPesquisa {
             System.out.println();
         }
 
-        public int getGrau() {
+        public int obterGrau() {
             int qtdFilhos = 0;
 
             if (filhoEsquerda != null) {
@@ -39,28 +44,33 @@ public class ArvoreBinariaPesquisa {
     private Nodo raiz;
     private int tamanho;
 
-    public ArvoreBinariaPesquisa(int valor) {
+    public ArvoreBinariaPesquisa(T valor) {
         raiz = new Nodo(valor);
         tamanho = 1;
     }
 
-    public void inserir(int chave) {
+    public ArvoreBinariaPesquisa() {
+        tamanho = 0;
+    }
+
+    public void inserir(T chave) {
         Nodo n = new Nodo(chave);
         if (raiz == null) {
             raiz = n;
+            tamanho = 1;
             return;
         }
-        this.inserir(chave, n, raiz);
+        this.inserir(n, raiz);
     }
 
-    private void inserir(int chave, Nodo n, Nodo pai) {
-        if (chave < pai.chave) {
+    private void inserir(Nodo n, Nodo pai) {
+        if (n.chave.compareTo(pai.chave) < 0) {
             if (pai.filhoEsquerda == null) {
                 pai.filhoEsquerda = n;
                 n.pai = pai;
                 tamanho++;
             } else {
-                inserir(chave, n, pai.filhoEsquerda);
+                inserir(n, pai.filhoEsquerda);
             }
         } else {
             if (pai.filhoDireita == null) {
@@ -68,12 +78,12 @@ public class ArvoreBinariaPesquisa {
                 n.pai = pai;
                 tamanho++;
             } else {
-                inserir(chave, n, pai.filhoDireita);
+                inserir(n, pai.filhoDireita);
             }
         }
     }
 
-    public void imprimirFilhos(int pai) {
+    public void imprimirFilhos(T pai) {
         Nodo nodoPai = obterNodo(pai);
         if (nodoPai == null) {
             System.out.println("Nodo não encontrado");
@@ -82,11 +92,11 @@ public class ArvoreBinariaPesquisa {
         nodoPai.imprimirFilhos();
     }
 
-    private Nodo obterNodo(int pai) {
+    private Nodo obterNodo(T pai) {
         return buscarNodoRecursivo(raiz, pai);
     }
 
-    private Nodo buscarNodoRecursivo(Nodo n, int chave) {
+    private Nodo buscarNodoRecursivo(Nodo n, T chave) {
         if (n == null) {
             return null;
         }
@@ -95,7 +105,7 @@ public class ArvoreBinariaPesquisa {
         }
 
         Nodo encontrado;
-        if (chave < n.chave) {
+        if (chave.compareTo(n.chave) < 0) {
             encontrado = buscarNodoRecursivo(n.filhoEsquerda, chave);
         } else {
             encontrado = buscarNodoRecursivo(n.filhoDireita, chave);
@@ -104,15 +114,15 @@ public class ArvoreBinariaPesquisa {
         return encontrado;
     }
 
-    public int obterPai(int chave) {
+    public T obterPai(T chave) {
         Nodo nodo = obterNodo(chave);
         if (nodo == null) {
             System.out.println("Nodo não encontrado");
-            return -1;
+            return null;
         }
         if (nodo.pai == null) {
             System.out.println("Nodo raiz");
-            return -1;
+            return null;
         }
         return nodo.pai.chave;
     }
@@ -126,16 +136,16 @@ public class ArvoreBinariaPesquisa {
         tamanho = 0;
     }
 
-    public int getGrau(int chave) {
+    public int obterGrau(T chave) {
         Nodo n = obterNodo(chave);
         if (n == null) {
             return -1;
         }
 
-        return n.getGrau();
+        return n.obterGrau();
     }
 
-    public void remover(int chave) {
+    public void remover(T chave) {
         Nodo n = obterNodo(chave);
         if (n == null) {
             return;
@@ -143,7 +153,7 @@ public class ArvoreBinariaPesquisa {
 
         Nodo pai = n.pai;
 
-        int grau = n.getGrau();
+        int grau = n.obterGrau();
         if (grau == 0) {
             if (obterTamanho() == 1) {
                 limpar();
@@ -202,19 +212,18 @@ public class ArvoreBinariaPesquisa {
         }
 
         tamanho--;
-    }
-
+    }    
+    
+    // metodo privado usado pelo remover
     private Nodo[] elementosCentralOrdem(Nodo raiz) {
         if (tamanho == 0) {
             return null;
         }
-        Nodo[] elementos = new Nodo[tamanho];
-        Nodo n = raiz;
+        
+        Nodo[] elementos = (Nodo[]) new Object[tamanho];
         Integer pos = 0;
-        pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
-        elementos[pos] = n;
-        pos++;
-        pos = elementosCentralOrdem(elementos, n.filhoDireita, pos);        
+
+        pos = elementosCentralOrdem(elementos, raiz, pos);               
 
         return elementos;
     }
@@ -232,22 +241,21 @@ public class ArvoreBinariaPesquisa {
         return pos;
     }
 
-    public int[] elementosPosOrdem() {
+    public T[] elementosPosOrdem() {
         if (tamanho == 0) {
             return null;
         }
-        int[] elementos = new int[tamanho];
-        Nodo n = raiz;
-        Integer pos = 0;
-        pos = elementosPosOrdem(elementos, n.filhoEsquerda, pos);
-        pos = elementosPosOrdem(elementos, n.filhoDireita, pos);
 
-        elementos[pos] = n.chave;
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
+        Integer pos = 0;
+
+        elementosPosOrdem(elementos, raiz, pos);
 
         return elementos;
     }
 
-    private Integer elementosPosOrdem(int[] elementos, Nodo n, Integer pos) {
+    private Integer elementosPosOrdem(T[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -260,24 +268,21 @@ public class ArvoreBinariaPesquisa {
         return pos;
     }    
 
-    public int[] elementosPreOrdem() {
+    public T[] elementosPreOrdem() {
         if (tamanho == 0) {
             return null;
         }
-
-        int[] elementos = new int[tamanho];
-        Nodo n = raiz;
+        
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
         Integer pos = 0;
 
-        elementos[pos] = n.chave;
-        pos++;
-        pos = elementosPreOrdem(elementos, n.filhoEsquerda, pos);
-        pos = elementosPreOrdem(elementos, n.filhoDireita, pos);        
+        elementosPreOrdem(elementos, raiz, pos);
 
         return elementos;
     }
 
-    private Integer elementosPreOrdem(int[] elementos, Nodo n, Integer pos) {
+    private Integer elementosPreOrdem(T[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -290,24 +295,21 @@ public class ArvoreBinariaPesquisa {
         return pos;
     }
 
-    public int[] elementosCentralOrdem() {
+    public T[] elementosCentralOrdem() {
         if (tamanho == 0) {
             return null;
-        }
+        }        
 
-        int[] elementos = new int[tamanho];
-        Nodo n = raiz;
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
         Integer pos = 0;
 
-        pos = elementosCentralOrdem(elementos, n.filhoEsquerda, pos);
-        elementos[pos] = n.chave;
-        pos++;
-        pos = elementosCentralOrdem(elementos, n.filhoDireita, pos);        
+        elementosCentralOrdem(elementos, raiz, pos);                
 
         return elementos;
     }
 
-    private Integer elementosCentralOrdem(int[] elementos, Nodo n, Integer pos) {
+    private Integer elementosCentralOrdem(T[] elementos, Nodo n, Integer pos) {
         if (n == null) {
             return pos;
         }
@@ -319,4 +321,121 @@ public class ArvoreBinariaPesquisa {
         
         return pos;
     }
+
+    public T[] elementosLarguraOrdem() {
+        if (tamanho == 0) {
+            return null;
+        }
+
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
+        Integer pos = 0;
+
+        FilaEstatica<Nodo> fila = new FilaEstatica<Nodo>();
+
+        fila.enfileirar(raiz);
+
+        while (fila.obterTamanho() != 0) {
+            Nodo n = fila.desenfileirar();
+            elementos[pos] = n.chave;
+            pos++;
+            if (n.filhoEsquerda != null) {
+                fila.enfileirar(n.filhoEsquerda);
+            }
+            if (n.filhoDireita != null) {
+                fila.enfileirar(n.filhoDireita);
+            }
+        }                
+
+        return elementos;
+    }
+
+    public boolean existe(T item) {
+        if(this.obterNodo(item) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public int obterAltura() {
+        if (raiz == null) {
+            return -1;
+        }
+
+        int esquerda = obterAltura(raiz.filhoEsquerda);
+        int direita = obterAltura(raiz.filhoDireita);
+
+        return 1 + Math.max(esquerda, direita);
+    }
+
+    private int obterAltura(Nodo n) {
+        if (n == null) {
+            return -1;
+        }
+
+        int esquerda = obterAltura(n.filhoEsquerda);
+        int direita = obterAltura(n.filhoDireita);
+
+        return 1 + Math.max(esquerda, direita);
+
+    }
+
+    public int obterNivel(T item) {
+        return obterNivel(raiz, item, 0);
+    }
+
+    private int obterNivel(Nodo n, T chave, int nivelAtual) {
+        if (n == null) {
+            return -1;
+        }
+
+        if (n.chave.equals(chave)) {
+            return nivelAtual;
+        }
+
+        if (chave.compareTo(n.chave) < 0) {
+            return obterNivel(n.filhoEsquerda, chave, nivelAtual + 1);
+        } else {
+            return obterNivel(n.filhoDireita, chave, nivelAtual + 1);
+        }
+    }
+
+    public T[] obterChavesAteChavePesquisa(T chave) {
+        
+        @SuppressWarnings("unchecked")
+        T[] elementos = (T[]) Array.newInstance(raiz.chave.getClass(), tamanho);
+        Integer pos = 0;
+        Nodo n = raiz;
+        boolean achou = false;
+
+        while (n != null) {
+            elementos[pos] = n.chave;
+            pos++;
+            if (n.chave.equals(chave)) {
+                achou = true;
+                break;
+            }
+            if (chave.compareTo(n.chave) < 0) {
+                n = n.filhoEsquerda;
+            } else {
+                n = n.filhoDireita;
+            }
+            
+        }
+
+        if (!achou) {
+            return null;            
+        }
+
+        //retornar array sem os nulls        
+        @SuppressWarnings("unchecked")
+        T[] retorno = (T[]) Array.newInstance(raiz.chave.getClass(), pos);
+        for (int i = 0; i < pos; i++) {
+            retorno[i] = elementos[i];
+        }
+
+        return retorno;
+
+    }    
+    
 }

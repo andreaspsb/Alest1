@@ -1,24 +1,31 @@
 package Aula14_fila_estatica;
 
-public class FilaEstatica {
-    String[] itens;
+public class FilaEstatica<T> {
+    T[] itens;
     private int capacidade = 7;
     private int inicio;
     private int fim;
     private int tamanho;
 
     public FilaEstatica() {
-        itens = new String[capacidade];
+        itens = (T[]) new Object[capacidade];
         inicio = 0;
         fim = -1;
     }
 
-    public int getTamanho() {
+    public int obterTamanho() {
         return tamanho;
     }
 
-    public void enfileirar(String item) {
-        if (tamanho + 2 > capacidade) {
+    public boolean isVazia() {
+        return tamanho == 0;
+    }
+
+    public void enfileirar(T item) {
+        if (item == null) {
+            throw new IllegalArgumentException("Item não pode ser nulo.");
+        }
+        if (tamanho + 2 > capacidade) {//TODO
             duplicar();
         }
         fim++;
@@ -27,7 +34,7 @@ public class FilaEstatica {
     }
 
     private void duplicar() {
-        String[] aux = new String[capacidade * 2];
+        T[] aux = (T[]) new Object[capacidade * 2];
         capacidade = capacidade * 2;
         int j = 0;
         for (int i = inicio; i <= fim; i++) {
@@ -39,15 +46,24 @@ public class FilaEstatica {
         itens = aux;
     }
 
-    public String desenfileirar() {
-        String retorno = itens[inicio];
+    public T desenfileirar() {
+        T retorno = itens[inicio];
         itens[inicio] = null;
         inicio++;
         tamanho--;
+        // Ajusta ponteiros se a fila ficar vazia
+        if (tamanho == 0) {
+            inicio = 0;
+            fim = -1;
+        }
         return retorno;
     }
 
     public void imprimir() {
+        if (isVazia()) {
+            System.out.println("Fila vazia.");
+            return;
+        }
         System.out.println();
         for (int i = inicio; i <= fim; i++) {
             System.out.print(itens[i] + " ");

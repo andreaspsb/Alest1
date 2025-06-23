@@ -2,7 +2,7 @@ package Aula14_fila_estatica;
 
 public class App {
     public static void main(String[] args) {
-        FilaEstatica f = new FilaEstatica();
+        FilaEstatica<String> f = new FilaEstatica<String>();
         f.enfileirar("Junior");
         f.enfileirar("Samantha");
         f.enfileirar("Andreas");

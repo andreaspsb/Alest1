@@ -15,9 +15,24 @@ public class ArvoreGenerica {
         }
 
         public void adicionarFilho(Nodo filho) {
+            if (numFilhos == filhos.length) {
+                duplicar();
+            }
+
             filho.pai = this;
             filhos[numFilhos] = filho;
             numFilhos++;
+        }
+
+        private void duplicar() {
+            Nodo[] aux = new Nodo[CAPACIDADE * 2];
+            CAPACIDADE = CAPACIDADE * 2;
+
+            for (int i = 0; i < filhos.length; i++) {
+                aux[i] = filhos[i];
+            }
+
+            filhos = aux;
         }
 
         public void imprimirFilhos() {
@@ -77,9 +92,6 @@ public class ArvoreGenerica {
         }
 
         for (int i = 0; i < n.numFilhos; i++) {
-            if (n.filhos[i].valor.equals(chave)) {
-                return n;
-            }
             Nodo encontrado = buscarNodoRecursivo(n.filhos[i], chave);
             if (encontrado != null) {
                 return encontrado;
@@ -108,7 +120,18 @@ public class ArvoreGenerica {
     }
 
     public void imprimirArvoreCompleta() {
-        
+        this.imprimirArvoreCompleta(raiz);
+    }
+
+    private void imprimirArvoreCompleta(Nodo n) {
+        if (n == null) {
+            return;
+        }
+        System.out.println(n.valor);
+
+        for (int i = 0; i < n.numFilhos; i++) {
+            imprimirArvoreCompleta(n.filhos[i]);            
+        }
     }
 
 }

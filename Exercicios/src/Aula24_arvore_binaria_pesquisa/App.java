@@ -2,7 +2,7 @@ package Aula24_arvore_binaria_pesquisa;
 
 public class App {
     public static void main(String[] args) {
-        ArvoreBinariaPesquisa abp = new ArvoreBinariaPesquisa(10);
+        ArvoreBinariaPesquisa<Integer> abp = new ArvoreBinariaPesquisa<Integer>(10);
         abp.inserir(5);
         abp.inserir(15);
         abp.inserir(20);
@@ -25,7 +25,7 @@ public class App {
 
         System.out.println();
 
-        int[] elementos = abp.elementosPosOrdem();
+        Integer[] elementos = abp.elementosPosOrdem();
         for (int j : elementos) {
             System.out.print(j + " ");
         }
